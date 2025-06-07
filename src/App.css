@@ -1,7 +1,7 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
@@ -45,6 +45,129 @@
   max-width: 1000px;
   margin: 10px auto;
   text-align: center;
+  padding: 20px;
+}
+
+.settings-panel {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.theme-selection, .difficulty-selection {
+  margin: 20px 0;
+}
+
+.theme-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.theme-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.theme-option:hover {
+  background: #e9ecef;
+}
+
+.theme-option.selected {
+  border-color: var(--main-color);
+  background: rgba(14, 210, 247, 0.1);
+}
+
+.theme-option img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 8px;
+}
+
+.theme-option span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.checkmark {
+  color: var(--main-color);
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+.difficulty-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.difficulty-option {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.difficulty-option:hover {
+  background: #e9ecef;
+}
+
+.difficulty-option.selected {
+  background: rgba(14, 210, 247, 0.1);
+}
+
+.radio-button {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #adb5bd;
+  border-radius: 50%;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.radio-dot {
+  width: 12px;
+  height: 12px;
+  background: var(--main-color);
+  border-radius: 50%;
+}
+
+.difficulty-option.selected .radio-button {
+  border-color: var(--main-color);
+}
+
+.start-button {
+  margin-top: 24px;
+  padding: 12px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.start-button:hover {
+  background: #05b2c2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .card-grid {
@@ -102,6 +225,7 @@
 
 .game-info {
   margin-top: 24px;
+  position: absolute;
 }
 
 button {
@@ -123,4 +247,85 @@ button:hover {
   position: absolute;
   top: 0%;
   left: 80%;
+}
+
+/* 胜利效果 */
+.win-message {
+  font-size: 2rem;
+  color: #ff6b6b;
+  animation: pulse 1s infinite alternate;
+  margin: 20px 0;
+}
+
+.game-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.restart-button, .home-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.restart-button {
+  background-color: #4ecdc4;
+  color: white;
+}
+
+.home-button {
+  background-color: #a78bfa;
+  color: white;
+}
+
+.restart-button:hover, .home-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+.confetti-effect {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+  background: transparent;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #f00;
+  opacity: 0.7;
+  animation: confetti-fall 3s ease-out forwards;
+  --random-x: 0;
+  --random-y: 0;
+}
+
+@keyframes confetti-fall {
+  0% { 
+    transform: translate(0, 0) rotate(0deg) scale(1);
+    opacity: 1;
+  }
+  100% { 
+    transform: translate(
+      calc(var(--random-x) * 100vw), 
+      calc(var(--random-y) * 100vh)
+    ) rotate(360deg) scale(0);
+    opacity: 0;
+  }
 }

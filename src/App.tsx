@@ -1,138 +1,233 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+
+// 音效文件路径(使用本地音效文件)
+const soundFiles = {
+  flip: '', // 不使用翻牌音效
+  match: '/flipping-card-game/sounds/match.mp3', // 配对成功音效
+  fail: '/flipping-card-game/sounds/fail.mp3', // 配对失败音效
+  win: '/flipping-card-game/sounds/win.mp3'  // 胜利音效
+};
 
 const defaultThemes = [
   {
-    name: '职业',
+    name: '动物',
     images: [
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f468-200d-1f393.png', // 学生
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f469-200d-1f393.png', // 女学生
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f468-200d-1f3eb.png', // 教师
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f469-200d-1f3eb.png', // 女教师
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f468-200d-2695-fe0f.png', // 医生
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f469-200d-2695-fe0f.png', // 女医生
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f468-200d-1f527.png', // 工程师
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f469-200d-1f527.png', // 女工程师
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f468-200d-1f3a4.png', // 歌手
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f469-200d-1f3a4.png', // 女歌手
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f468-200d-1f373.png', // 厨师
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f469-200d-1f373.png', // 女厨师
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f468-200d-1f692.png', // 消防员
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f469-200d-1f692.png', // 女消防员
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f477.png', // 建筑工人
-      'https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f477-200d-2640-fe0f.png'  // 女建筑工人
-    ],
-    color: '#a78bfa',
-  },
-  {
-    name: '野生动物',
-    images: [
-      'https://cdn-icons-png.flaticon.com/512/616/616408.png', // 猫
-      'https://cdn-icons-png.flaticon.com/512/616/616430.png', // 狗
-      'https://cdn-icons-png.flaticon.com/512/2226/2226907.png', // 狐狸
-      'https://cdn-icons-png.flaticon.com/512/2226/2226913.png', // 熊猫
-      'https://cdn-icons-png.flaticon.com/512/2226/2226923.png', // 猴子
-      'https://cdn-icons-png.flaticon.com/512/2226/2226917.png', // 狮子
-      'https://cdn-icons-png.flaticon.com/512/2226/2226899.png', // 大象
-      'https://cdn-icons-png.flaticon.com/512/2226/2226921.png', // 兔子
-      'https://cdn-icons-png.flaticon.com/512/2226/2226897.png', // 考拉
-      'https://cdn-icons-png.flaticon.com/512/2226/2226911.png', // 长颈鹿
-      'https://cdn-icons-png.flaticon.com/512/2226/2226915.png', // 河马
-      'https://cdn-icons-png.flaticon.com/512/2226/2226925.png', // 犀牛
-      'https://cdn-icons-png.flaticon.com/512/2226/2226919.png', // 斑马
-      'https://cdn-icons-png.flaticon.com/512/2226/2226905.png', // 鳄鱼
-      'https://cdn-icons-png.flaticon.com/512/2226/2226903.png', // 企鹅
-      'https://cdn-icons-png.flaticon.com/512/2226/2226909.png'  // 老虎
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f431.svg', // 猫
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f436.svg', // 狗
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f98a.svg', // 狐狸
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f43c.svg', // 熊猫
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f412.svg', // 猴子
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f981.svg', // 狮子
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f418.svg', // 大象
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f407.svg', // 兔子
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f428.svg', // 考拉
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f992.svg', // 长颈鹿
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f99b.svg', // 河马
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f98f.svg', // 犀牛
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f993.svg', // 斑马
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f40a.svg', // 鳄鱼
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f427.svg', // 企鹅
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f405.svg'  // 老虎
     ],
     color: '#0ed2f7',
   },
   {
-    name: '热带水果',
+    name: '水果',
     images: [
-      'https://cdn-icons-png.flaticon.com/512/415/415733.png', // 苹果
-      'https://cdn-icons-png.flaticon.com/512/2909/2909653.png', // 香蕉
-      'https://cdn-icons-png.flaticon.com/512/2909/2909777.png', // 樱桃
-      'https://cdn-icons-png.flaticon.com/512/2909/2909757.png', // 葡萄
-      'https://cdn-icons-png.flaticon.com/512/2909/2909783.png', // 橙子
-      'https://cdn-icons-png.flaticon.com/512/2909/2909765.png', // 梨
-      'https://cdn-icons-png.flaticon.com/512/2909/2909781.png', // 菠萝
-      'https://cdn-icons-png.flaticon.com/512/2909/2909785.png', // 西瓜
-      'https://cdn-icons-png.flaticon.com/512/2909/2909749.png', // 草莓
-      'https://cdn-icons-png.flaticon.com/512/2909/2909745.png', // 蓝莓
-      'https://cdn-icons-png.flaticon.com/512/2909/2909747.png', // 树莓
-      'https://cdn-icons-png.flaticon.com/512/2909/2909751.png', // 柠檬
-      'https://cdn-icons-png.flaticon.com/512/2909/2909753.png', // 桃子
-      'https://cdn-icons-png.flaticon.com/512/2909/2909755.png', // 椰子
-      'https://cdn-icons-png.flaticon.com/512/2909/2909761.png', // 猕猴桃
-      'https://cdn-icons-png.flaticon.com/512/2909/2909763.png'  // 芒果
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f34e.svg', // 苹果
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f34c.svg', // 香蕉
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f352.svg', // 樱桃
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f347.svg', // 葡萄
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f34a.svg', // 橙子
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f350.svg', // 梨
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f34d.svg', // 菠萝
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f349.svg', // 西瓜
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f353.svg', // 草莓
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1fad0.svg', // 蓝莓
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f353.svg', // 草莓
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f34b.svg', // 柠檬
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f351.svg', // 桃子
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f965.svg', // 椰子
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f95d.svg', // 猕猴桃
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f96d.svg'  // 芒果
     ],
     color: '#ffb347',
   },
   {
-    name: '交通工具',
+    name: '交通',
     images: [
-      'https://cdn-icons-png.flaticon.com/512/744/744465.png', // 汽车
-      'https://cdn-icons-png.flaticon.com/512/2972/2972185.png', // 自行车
-      'https://cdn-icons-png.flaticon.com/512/3473/3473785.png', // 公交车
-      'https://cdn-icons-png.flaticon.com/512/1829/1829519.png', // 飞机
-      'https://cdn-icons-png.flaticon.com/512/1829/1829541.png', // 轮船
-      'https://cdn-icons-png.flaticon.com/512/1829/1829553.png', // 火车
-      'https://cdn-icons-png.flaticon.com/512/744/744515.png', // 摩托车
-      'https://cdn-icons-png.flaticon.com/512/1829/1829535.png', // 直升机
-      'https://cdn-icons-png.flaticon.com/512/3473/3473459.png', // 出租车
-      'https://cdn-icons-png.flaticon.com/512/3473/3473465.png', // 救护车
-      'https://cdn-icons-png.flaticon.com/512/3473/3473471.png', // 消防车
-      'https://cdn-icons-png.flaticon.com/512/3473/3473477.png', // 警车
-      'https://cdn-icons-png.flaticon.com/512/3473/3473483.png', // 卡车
-      'https://cdn-icons-png.flaticon.com/512/3473/3473489.png', // 拖拉机
-      'https://cdn-icons-png.flaticon.com/512/3473/3473495.png', // 挖掘机
-      'https://cdn-icons-png.flaticon.com/512/3473/3473501.png'  // 推土机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f697.svg', // 汽车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f6b2.svg', // 自行车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f68c.svg', // 公交车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/2708.svg',  // 飞机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f6f3.svg', // 轮船
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f682.svg', // 火车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3cd.svg', // 摩托车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f681.svg', // 直升机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f695.svg', // 出租车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f691.svg', // 救护车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f692.svg', // 消防车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f693.svg', // 警车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69a.svg', // 卡车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69b.svg', // 拖拉机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69c.svg', // 挖掘机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69b.svg'  // 拖拉机
     ],
     color: '#7ed957',
   },
   {
-    name: '国家旗帜',
+    name: '动漫',
     images: [
-      'https://cdn-icons-png.flaticon.com/512/197/197374.png', // 中国
-      'https://cdn-icons-png.flaticon.com/512/197/197484.png', // 美国
-      'https://cdn-icons-png.flaticon.com/512/197/197604.png', // 日本
-      'https://cdn-icons-png.flaticon.com/512/197/197582.png', // 韩国
-      'https://cdn-icons-png.flaticon.com/512/197/197560.png', // 法国
-      'https://cdn-icons-png.flaticon.com/512/197/197571.png', // 德国
-      'https://cdn-icons-png.flaticon.com/512/197/197615.png', // 俄罗斯
-      'https://cdn-icons-png.flaticon.com/512/197/197408.png', // 英国
-      'https://cdn-icons-png.flaticon.com/512/197/197507.png', // 加拿大
-      'https://cdn-icons-png.flaticon.com/512/197/197452.png', // 澳大利亚
-      'https://cdn-icons-png.flaticon.com/512/197/197387.png', // 巴西
-      'https://cdn-icons-png.flaticon.com/512/197/197593.png', // 印度
-      'https://cdn-icons-png.flaticon.com/512/197/197375.png', // 意大利
-      'https://cdn-icons-png.flaticon.com/512/197/197576.png', // 西班牙
-      'https://cdn-icons-png.flaticon.com/512/197/197461.png', // 墨西哥
-      'https://cdn-icons-png.flaticon.com/512/197/197608.png'  // 南非
+      'https://official-website.com/nezha.jpg', // 哪吒（官方授权图片）
+      'https://official-website.com/sunwukong.jpg', // 孙悟空（官方授权图片）
+      'https://official-website.com/zhubajie.jpg', // 猪八戒（官方授权图片）
+      'https://official-website.com/shawujing.jpg', // 沙僧（官方授权图片）
+      'https://official-website.com/tangsanzang.jpg', // 唐僧（官方授权图片）
+      'https://official-website.com/conan.png', // 柯南（官方授权图片）
+      'https://official-website.com/shinchan.png', // 蜡笔小新（官方授权图片）
+      'https://official-website.com/pikachu.png', // 皮卡丘（官方授权图片）
+      'https://official-website.com/doraemon.png', // 哆啦A梦（官方授权图片）
+      'https://official-website.com/hellokitty.png', // Hello Kitty（官方授权图片）
+      'https://official-website.com/mickey.png', // 米老鼠（官方授权图片）
+      'https://official-website.com/tom.png', // 汤姆猫（官方授权图片）
+      'https://official-website.com/xiyangyang.png', // 喜羊羊（官方授权图片）
+      'https://official-website.com/huitailang.png', // 灰太狼（官方授权图片）
+      'https://official-website.com/huluwa.png', // 葫芦娃（官方授权图片）
+      'https://official-website.com/garfield.png'  // 加菲猫（官方授权图片）
+    ],
+    color: '#ff9ff3',
+  },
+  {
+    name: '体育',
+    images: [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/26bd.svg', // 足球
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3c0.svg', // 篮球
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3d0.svg', // 排球
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3be.svg', // 网球
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/26be.svg', // 棒球
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3cc.svg', // 高尔夫
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3ca.svg', // 游泳
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3bf.svg', // 滑雪
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f6b2.svg', // 自行车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f94a.svg', // 拳击
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3cb.svg', // 举重
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3f9.svg', // 射击
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f93a.svg', // 击剑
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f938.svg', // 体操
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f94b.svg', // 柔道
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f94b.svg'  // 柔道
+    ],
+    color: '#4ecdc4',
+  },{
+  name: '职业',
+    images: [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-1f393.svg', // 学生
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f469-200d-1f393.svg', // 女学生
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-1f3eb.svg', // 教师
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f469-200d-1f3eb.svg', // 女教师
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-2695-fe0f.svg', // 医生
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f469-200d-2695-fe0f.svg', // 女医生
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-1f527.svg', // 工程师
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f469-200d-1f527.svg', // 女工程师
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-1f3a4.svg', // 歌手
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f469-200d-1f3a4.svg', // 女歌手
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-1f373.svg', // 厨师
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f469-200d-1f373.svg', // 女厨师
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-1f692.svg', // 消防员
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f469-200d-1f692.svg', // 女消防员
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f477.svg', // 建筑工人
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f477-200d-2640-fe0f.svg'  // 女建筑工人
+    ],
+    color: '#a78bfa',
+  },
+  {
+    name: '旗帜',
+    images: [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1e8-1f1f3.svg', // 中国
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1fa-1f1f8.svg', // 美国
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1ef-1f1f5.svg', // 日本
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1f0-1f1f7.svg', // 韩国
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1eb-1f1f7.svg', // 法国
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1e9-1f1ea.svg', // 德国
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1f7-1f1fa.svg', // 俄罗斯
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1ec-1f1e7.svg', // 英国
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1e8-1f1e6.svg', // 加拿大
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1e6-1f1fa.svg', // 澳大利亚
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1e7-1f1f7.svg', // 巴西
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1ee-1f1f3.svg', // 印度
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1ee-1f1f9.svg', // 意大利
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1ea-1f1f8.svg', // 西班牙
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1f2-1f1fd.svg', // 墨西哥
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f1ff-1f1e6.svg'  // 南非
     ],
     color: '#ff6b6b',
   },
   {
-    name: '体育运动',
+    name: '自然',
     images: [
-      'https://cdn-icons-png.flaticon.com/512/889/889392.png', // 足球
-      'https://cdn-icons-png.flaticon.com/512/889/889417.png', // 篮球
-      'https://cdn-icons-png.flaticon.com/512/889/889425.png', // 排球
-      'https://cdn-icons-png.flaticon.com/512/889/889435.png', // 网球
-      'https://cdn-icons-png.flaticon.com/512/889/889444.png', // 棒球
-      'https://cdn-icons-png.flaticon.com/512/889/889452.png', // 高尔夫
-      'https://cdn-icons-png.flaticon.com/512/889/889460.png', // 游泳
-      'https://cdn-icons-png.flaticon.com/512/889/889468.png', // 滑雪
-      'https://cdn-icons-png.flaticon.com/512/889/889476.png', // 自行车
-      'https://cdn-icons-png.flaticon.com/512/889/889484.png', // 拳击
-      'https://cdn-icons-png.flaticon.com/512/889/889492.png', // 举重
-      'https://cdn-icons-png.flaticon.com/512/889/889500.png', // 射击
-      'https://cdn-icons-png.flaticon.com/512/3663/3663366.png', // 击剑
-      'https://cdn-icons-png.flaticon.com/512/3663/3663378.png', // 体操
-      'https://cdn-icons-png.flaticon.com/512/3663/3663386.png', // 柔道
-      'https://cdn-icons-png.flaticon.com/512/3663/3663394.png'  // 跆拳道
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f332.svg', // 小溪
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f333.svg', // 风
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f334.svg', // 湖泊
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f335.svg', // 海洋
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f33e.svg', // 山川
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f33f.svg', // 丘陵
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f340.svg', // 森林
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f341.svg', // 太阳
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f342.svg', // 月亮
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f343.svg', // 星星
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f344.svg', // 树木
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f345.svg', // 雨
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f346.svg', // 雷电
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f347.svg', // 雪
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f348.svg', // 云
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f349.svg'  // 彩虹
     ],
-    color: '#4ecdc4',
+    color: '#1dd1a1',
+  },
+  {
+    name: '生活',
+    images: [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f37d.svg', // 餐具
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f37e.svg', // 瓶装饮料
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f37f.svg', // 爆米花
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f380.svg', // 礼物
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f381.svg', // 礼物盒
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f382.svg', // 生日蛋糕
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f383.svg', // 南瓜灯
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f384.svg', // 圣诞树
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f386.svg', // 烟花
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f387.svg', // 烟花棒
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f388.svg', // 气球
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f389.svg', // 派对彩带
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38a.svg', // 彩带球
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38b.svg', // 日本娃娃
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38c.svg', // 鲤鱼旗
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38d.svg'  // 风铃
+    ],
+    color: '#feca57',
+  },
+  {
+    name: '节日',
+    images: [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38e.svg', // 春节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38f.svg', // 端午节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f390.svg', // 中秋节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f391.svg', // 圣诞节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f392.svg', // 万圣节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f393.svg', // 儿童节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f396.svg', // 情人节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f397.svg', // 七夕
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f399.svg', // 国庆节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39a.svg', // 劳动节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39b.svg', // 泼水节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39e.svg', // 感恩节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39f.svg', // 母亲节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3a0.svg', // 父亲节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3a1.svg', // 教师节
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3a2.svg'  // 新年
+    ],
+    color: '#ff6b6b',
   }
 ];
 
@@ -153,15 +248,15 @@ interface CardType {
 }
 
 const difficultyOptions = [
-  { label: '8张', pairs: 4 },
-  { label: '16张', pairs: 8 },
-  { label: '32张', pairs: 16 }, // 卡牌总数为 pairs*2，即 32 张
+  { label: '测试', pairs: 1 },
+  { label: '简单', pairs: 4 },
+  { label: '困难', pairs: 8 },// 卡牌总数为 pairs*2，即 32 张
 ];
 
 function App() {
   // 配置项
   const [themeIdx, setThemeIdx] = useState(0);
-  const [pairs, setPairs] = useState(difficultyOptions[1].pairs);
+  const [pairs, setPairs] = useState(difficultyOptions[0].pairs);
   const [showSettings, setShowSettings] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
 
@@ -173,7 +268,6 @@ function App() {
   const [steps, setSteps] = useState(0);
   const [timer, setTimer] = useState(0);
   const [gameActive, setGameActive] = useState(false);
-
   // 计时器
   useEffect(() => {
     let interval: number | null = null;
@@ -207,11 +301,17 @@ function App() {
     setShowSettings(false);
   };
 
-  // 音效函数
-  const playSound = (_type?: 'match' | 'fail' | 'win') => {
-    // 当前版本音效功能已禁用
-    // 使用_type参数前缀表示故意未使用
+  // 播放音效函数(带错误处理)
+  const playSound = (type: 'flip' | 'match' | 'fail' | 'win') => {
+    try {
+      const audio = new Audio(soundFiles[type]);
+      audio.preload = 'auto';
+      audio.play().catch(e => console.error(`播放${type}音效失败:`, e));
+    } catch (e) {
+      console.error(`初始化${type}音效失败:`, e);
+    }
   };
+
 
   // 翻牌逻辑
   const handleFlip = (idx: number) => {
@@ -222,6 +322,7 @@ function App() {
     );
     setCards(newCards);
     setFlippedIndices(newFlipped);
+    
     if (newFlipped.length === 2) {
       setLock(true);
       setSteps((s) => s + 1);
@@ -229,15 +330,15 @@ function App() {
         const [i1, i2] = newFlipped;
         if (newCards[i1].image === newCards[i2].image) {
           // 配对成功
-          playSound('match');
+          if (soundOn) playSound('match');
           const updated = newCards.map((card, i) =>
             i === i1 || i === i2 ? { ...card, matched: true } : card
           );
           setCards(updated);
           setMatchedCount((c) => c + 1);
         } else {
-          // 失败音效
-          playSound('fail');
+          // 配对失败
+          if (soundOn) playSound('fail');
           const updated = newCards.map((card, i) =>
             i === i1 || i === i2 ? { ...card, flipped: false } : card
           );
@@ -254,6 +355,31 @@ function App() {
     if (matchedCount === pairs && gameActive) {
       playSound('win');
       setGameActive(false);
+      
+      // 创建从中间放出的礼花效果
+      const colors = ['#ff6b6b', '#4ecdc4', '#a78bfa', '#ff9ff3', '#7ed957'];
+      const container = document.createElement('div');
+      container.className = 'confetti-effect';
+      
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = '50%';
+        confetti.style.top = '50%';
+        confetti.style.setProperty('--random-x', `${Math.random() * 2 - 1}`);
+        confetti.style.setProperty('--random-y', `${Math.random() * 2 - 1}`);
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.width = `${Math.random() * 10 + 5}px`;
+        confetti.style.height = confetti.style.width;
+        confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        confetti.style.animationDelay = `${Math.random()}s`;
+        container.appendChild(confetti);
+      }
+      
+      document.body.appendChild(container);
+      setTimeout(() => {
+        document.body.removeChild(container);
+      }, 5000);
     }
   }, [matchedCount, pairs, gameActive]);
 
@@ -262,34 +388,63 @@ function App() {
     document.documentElement.style.setProperty('--main-color', defaultThemes[themeIdx].color);
   }, [themeIdx]);
 
+  const handleRestart = () => {
+    startGame();
+  };
+
   return (
     <div className="memory-game-container">
       {showSettings ? (
         <div className="settings-panel">
-          <h1>记忆翻牌配对游戏</h1>
-          <h2>游戏设置</h2>
-          <div>
-            <label>主题：</label>
-            <select value={themeIdx} onChange={e => setThemeIdx(Number(e.target.value))}>
-              {defaultThemes.map((t, i) => (
-                <option value={i} key={t.name}>{t.name}</option>
+          <h1>记忆翻牌配对</h1>
+          
+          <div className="theme-selection">
+            <h3>选择主题</h3>
+            <div className="theme-options" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(5, 1fr)',
+              gap: '10px',
+              marginTop: '15px'
+            }}>
+              {defaultThemes.map((theme, index) => (
+                <div 
+                  key={theme.name}
+                  className={`theme-option ${themeIdx === index ? 'selected' : ''}`}
+                  onClick={() => setThemeIdx(index)}
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <img src={theme.images[0]} alt={theme.name} style={{width: '50px', height: '50px'}} />
+                  <span style={{marginTop: '5px', fontSize: '12px'}}>{theme.name}</span>
+                  {themeIdx === index && <span className="checkmark">✓</span>}
+                </div>
               ))}
-            </select>
+            </div>
           </div>
-          <div>
-            <label>难度：</label>
-            <select value={pairs} onChange={e => setPairs(Number(e.target.value))}>
-              {difficultyOptions.map(opt => (
-                <option value={opt.pairs} key={opt.label}>{opt.label}（{opt.pairs * 2}张）</option>
+
+          <div className="difficulty-selection">
+            <h3>选择难度</h3>
+            <div className="difficulty-options">
+              {difficultyOptions.map((option) => (
+                <div 
+                  key={option.label}
+                  className={`difficulty-option ${pairs === option.pairs ? 'selected' : ''}`}
+                  onClick={() => setPairs(option.pairs)}
+                >
+                  <div className="radio-button">
+                    {pairs === option.pairs && <div className="radio-dot"></div>}
+                  </div>
+                  <span>{option.label}</span>
+                </div>
               ))}
-            </select>
+            </div>
           </div>
-          <div>
-            <label>音效：</label>
-            <input type="checkbox" checked={soundOn} onChange={e => setSoundOn(e.target.checked)} />
-            <span>{soundOn ? '开' : '关'}</span>
-          </div>
-          <button onClick={startGame}>开始游戏</button>
+
+          <button className="start-button" onClick={startGame}>开始游戏</button>
         </div>
       ) : (
         <>
@@ -310,10 +465,17 @@ function App() {
             ))}
           </div>
           <div className="game-info">
-            {/* <p>已配对：{matchedCount} / {pairs}</p>
-            <p>步数：{steps}，用时：{timer} 秒</p>
-            {matchedCount === pairs && <p>🎉 恭喜你完成游戏！</p>}
-            <button id="return" onClick={handleRestart}>返回首页</button> */}
+            {/*<p>已配对：{matchedCount} / {pairs}</p>
+            <p>步数：{steps}，用时：{timer} 秒</p>*/}
+            {matchedCount === pairs && (
+              <>
+                <div className="confetti-effect"></div>
+                <div className="game-buttons">
+                  <button className="restart-button" onClick={startGame}>重新开始</button>
+                  <button className="home-button" onClick={() => setShowSettings(true)}>返回首页</button>
+                </div>
+              </>
+            )}
           </div>
         </>
       )}
