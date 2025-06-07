@@ -207,8 +207,11 @@ function App() {
     setShowSettings(false);
   };
 
-  // 音效已禁用
-  const playSound = () => {};
+  // 音效函数
+  const playSound = (_type?: 'match' | 'fail' | 'win') => {
+    // 当前版本音效功能已禁用
+    // 使用_type参数前缀表示故意未使用
+  };
 
   // 翻牌逻辑
   const handleFlip = (idx: number) => {
@@ -253,12 +256,6 @@ function App() {
       setGameActive(false);
     }
   }, [matchedCount, pairs, gameActive]);
-
-  const handleRestart = () => {
-    setShowSettings(true);
-    setGameActive(false);
-    setTimer(0);
-  };
 
   // 主题色
   useEffect(() => {
