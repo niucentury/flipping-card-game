@@ -1,0 +1,126 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 0em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.memory-game-container {
+  max-width: 1000px;
+  margin: 10px auto;
+  text-align: center;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 90px);
+  grid-gap: 16px;
+  justify-content: center;
+  margin: 0 0;
+}
+
+.card {
+  width: 90px;
+  height: 120px;
+  perspective: 600px;
+  cursor: pointer;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4,2,0.6,1);
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
+.card-front {
+  background: linear-gradient(135deg, #b2fefa 0%, #0ed2f7 100%);
+}
+
+.card-back {
+  background: #fff;
+  transform: rotateY(180deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-back img {
+  width: 60px;
+  height: 60px;
+}
+
+.game-info {
+  margin-top: 24px;
+}
+
+button {
+  margin-top: 12px;
+  padding: 8px 20px;
+  border: none;
+  background: #0ed2f7;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #05b2c2;
+}
+
+#return {
+  position: absolute;
+  top: 0%;
+  left: 80%;
+}
