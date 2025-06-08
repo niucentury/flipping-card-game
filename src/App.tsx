@@ -79,22 +79,22 @@ const defaultThemes = [
   {
     name: '动漫',
     images: [
-      'https://official-website.com/nezha.jpg', // 哪吒（官方授权图片）
-      'https://official-website.com/sunwukong.jpg', // 孙悟空（官方授权图片）
-      'https://official-website.com/zhubajie.jpg', // 猪八戒（官方授权图片）
-      'https://official-website.com/shawujing.jpg', // 沙僧（官方授权图片）
-      'https://official-website.com/tangsanzang.jpg', // 唐僧（官方授权图片）
-      'https://official-website.com/conan.png', // 柯南（官方授权图片）
-      'https://official-website.com/shinchan.png', // 蜡笔小新（官方授权图片）
-      'https://official-website.com/pikachu.png', // 皮卡丘（官方授权图片）
-      'https://official-website.com/doraemon.png', // 哆啦A梦（官方授权图片）
-      'https://official-website.com/hellokitty.png', // Hello Kitty（官方授权图片）
-      'https://official-website.com/mickey.png', // 米老鼠（官方授权图片）
-      'https://official-website.com/tom.png', // 汤姆猫（官方授权图片）
-      'https://official-website.com/xiyangyang.png', // 喜羊羊（官方授权图片）
-      'https://official-website.com/huitailang.png', // 灰太狼（官方授权图片）
-      'https://official-website.com/huluwa.png', // 葫芦娃（官方授权图片）
-      'https://official-website.com/garfield.png'  // 加菲猫（官方授权图片）
+      '/flipping-card-game/images/nezha.webp', // 哪吒
+      '/flipping-card-game/images/sunwukong.jpeg', // 孙悟空
+      '/flipping-card-game/images/doraemon.webp', // 哆啦A梦
+      '/flipping-card-game/images/conan.jpeg', // 柯南
+      '/flipping-card-game/images/pikachu.jpeg', // 皮卡丘
+      '/flipping-card-game/images/xiaoxin.webp', // 蜡笔小新
+      '/flipping-card-game/images/hellokitty.jpeg', // 美少女战士
+      '/flipping-card-game/images/huluwa.jpeg', // 葫芦娃
+      '/flipping-card-game/images/xiyangyang.webp', // 喜羊羊
+      '/flipping-card-game/images/weini.jpeg', // 威尼
+      '/flipping-card-game/images/tom.webp', // 汤姆猫
+      '/flipping-card-game/images/jerry.webp', // 杰瑞鼠
+      '/flipping-card-game/images/mickey.jpg', // 米老鼠
+      '/flipping-card-game/images/donaldduck.jpg', // 唐老鸭
+      '/flipping-card-game/images/aobing.jpeg', // 敖丙
+      '/flipping-card-game/images/xiaobai.jpeg'  // 小白
     ],
     color: '#ff9ff3',
   },
@@ -163,7 +163,7 @@ const defaultThemes = [
     ],
     color: '#ff6b6b',
   },
-  {
+  /*{
     name: '自然',
     images: [
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f332.svg', // 小溪
@@ -184,7 +184,7 @@ const defaultThemes = [
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f349.svg'  // 彩虹
     ],
     color: '#1dd1a1',
-  },
+  },*/
   {
     name: '生活',
     images: [
@@ -207,28 +207,28 @@ const defaultThemes = [
     ],
     color: '#feca57',
   },
-  {
+  /*{
     name: '节日',
     images: [
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38e.svg', // 春节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38f.svg', // 端午节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f390.svg', // 中秋节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f391.svg', // 圣诞节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f392.svg', // 万圣节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f393.svg', // 儿童节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f396.svg', // 情人节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f397.svg', // 七夕
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f399.svg', // 国庆节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39a.svg', // 劳动节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39b.svg', // 泼水节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39e.svg', // 感恩节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f39f.svg', // 母亲节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3a0.svg', // 父亲节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3a1.svg', // 教师节
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3a2.svg'  // 新年
+      'https://emojicdn.elk.sh/🎆', // 春节
+      'https://emojicdn.elk.sh/🎏', // 端午节
+      'https://emojicdn.elk.sh/🎑', // 中秋节
+      'https://emojicdn.elk.sh/🎄', // 圣诞节
+      'https://emojicdn.elk.sh/🎃', // 万圣节
+      'https://emojicdn.elk.sh/🧒', // 儿童节
+      'https://emojicdn.elk.sh/💝', // 情人节
+      'https://emojicdn.elk.sh/🎎', // 七夕
+      'https://emojicdn.elk.sh/🇨🇳', // 国庆节
+      'https://emojicdn.elk.sh/🛠️', // 劳动节
+      'https://emojicdn.elk.sh/??', // 泼水节
+      'https://emojicdn.elk.sh/🦃', // 感恩节
+      'https://emojicdn.elk.sh/🌷', // 母亲节
+      'https://emojicdn.elk.sh/👔', // 父亲节
+      'https://emojicdn.elk.sh/📚', // 教师节
+      'https://emojicdn.elk.sh/🎊'  // 新年
     ],
     color: '#ff6b6b',
-  }
+  }*/
 ];
 
 function shuffle<T>(array: T[]): T[] {
@@ -248,9 +248,10 @@ interface CardType {
 }
 
 const difficultyOptions = [
-  { label: '测试', pairs: 1 },
+  //{ label: '测试', pairs: 1 },
   { label: '简单', pairs: 4 },
   { label: '困难', pairs: 8 },// 卡牌总数为 pairs*2，即 32 张
+  { label: '地狱', pairs: 16 },
 ];
 
 function App() {
@@ -301,11 +302,17 @@ function App() {
     setShowSettings(false);
   };
 
-  // 播放音效函数(带错误处理)
+  // 播放音效函数(带错误处理和音量控制)
   const playSound = (type: 'flip' | 'match' | 'fail' | 'win') => {
     try {
       const audio = new Audio(soundFiles[type]);
       audio.preload = 'auto';
+      // 设置不同音效的音量
+      if (type === 'fail') {
+        audio.volume = 1; // 调高失败音效音量
+      } else {
+        audio.volume = 0.2; // 默认音量
+      }
       audio.play().catch(e => console.error(`播放${type}音效失败:`, e));
     } catch (e) {
       console.error(`初始化${type}音效失败:`, e);
@@ -402,7 +409,7 @@ function App() {
             <h3>选择主题</h3>
             <div className="theme-options" style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(5, 1fr)',
+              gridTemplateColumns: 'repeat(4, 1fr)',
               gap: '10px',
               marginTop: '15px'
             }}>
