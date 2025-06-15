@@ -1,12 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import { getUserFromLocal, createNewUser, saveUserToLocal, getAllUsers, updateUserScore, saveUser } from './services/userService';
+import { type User } from './models/User';
+import UserModal from './components/UserModal';
+import Leaderboard from './components/Leaderboard';
+import './components/UserModal.css';
 
 // 音效文件路径(使用本地音效文件)
 const soundFiles = {
   flip: '', // 不使用翻牌音效
   match: '/flipping-card-game/sounds/match.mp3', // 配对成功音效
   fail: '/flipping-card-game/sounds/fail.mp3', // 配对失败音效
-  win: '/flipping-card-game/sounds/win.mp3'  // 胜利音效
+  win: [
+    '/flipping-card-game/sounds/win1.mp3',
+    '/flipping-card-game/sounds/win2.mp3'
+  ]  // 随机胜利音效
 };
 
 const defaultThemes = [
@@ -55,28 +63,6 @@ const defaultThemes = [
     color: '#ffb347',
   },
   {
-    name: '交通',
-    images: [
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f697.svg', // 汽车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f6b2.svg', // 自行车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f68c.svg', // 公交车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/2708.svg',  // 飞机
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f6f3.svg', // 轮船
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f682.svg', // 火车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3cd.svg', // 摩托车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f681.svg', // 直升机
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f695.svg', // 出租车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f691.svg', // 救护车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f692.svg', // 消防车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f693.svg', // 警车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69a.svg', // 卡车
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69b.svg', // 拖拉机
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69c.svg', // 挖掘机
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69b.svg'  // 拖拉机
-    ],
-    color: '#7ed957',
-  },
-  {
     name: '动漫',
     images: [
       '/flipping-card-game/images/nezha.webp', // 哪吒
@@ -97,6 +83,55 @@ const defaultThemes = [
       '/flipping-card-game/images/xiaobai.jpeg'  // 小白
     ],
     color: '#ff9ff3',
+  },
+  {
+    name: '玩偶',
+    images: [
+      '/flipping-card-game/images/xiaoxinqie.png',
+      '/flipping-card-game/images/bingdundun.png',
+      '/flipping-card-game/images/bull.png',
+      '/flipping-card-game/images/caomeixiong.png',
+      '/flipping-card-game/images/cat.png',
+      '/flipping-card-game/images/cow.png',
+      '/flipping-card-game/images/daidai.png',
+      '/flipping-card-game/images/dog.png',
+      '/flipping-card-game/images/guawu.png',
+      '/flipping-card-game/images/heixingxing.png',
+      '/flipping-card-game/images/jiafeimao.png',
+      '/flipping-card-game/images/kaka.png',
+      '/flipping-card-game/images/kapibala.png',
+      '/flipping-card-game/images/mengqiqi.png',
+      '/flipping-card-game/images/mickey.png',
+      '/flipping-card-game/images/panghu.png',
+      '/flipping-card-game/images/piqiagou.png',
+      '/flipping-card-game/images/qie.png',
+      '/flipping-card-game/images/smallcat.png',
+      '/flipping-card-game/images/smalldog.png',
+      '/flipping-card-game/images/ultrama.png'
+    ],
+    color: '#f9e79f',
+  },
+  {
+    name: '交通',
+    images: [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f697.svg', // 汽车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f6b2.svg', // 自行车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f68c.svg', // 公交车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/2708.svg',  // 飞机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f6f3.svg', // 轮船
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f682.svg', // 火车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f3cd.svg', // 摩托车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f681.svg', // 直升机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f695.svg', // 出租车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f691.svg', // 救护车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f692.svg', // 消防车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f693.svg', // 警车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69a.svg', // 卡车
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69b.svg', // 拖拉机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69c.svg', // 挖掘机
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f69b.svg'  // 拖拉机
+    ],
+    color: '#7ed957',
   },
   {
     name: '体育',
@@ -185,7 +220,7 @@ const defaultThemes = [
     ],
     color: '#1dd1a1',
   },*/
-  {
+  /*{
     name: '生活',
     images: [
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f37d.svg', // 餐具
@@ -206,7 +241,7 @@ const defaultThemes = [
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38d.svg'  // 风铃
     ],
     color: '#feca57',
-  },
+  },*/
   /*{
     name: '节日',
     images: [
@@ -250,16 +285,47 @@ interface CardType {
 const difficultyOptions = [
   //{ label: '测试', pairs: 1 },
   { label: '简单', pairs: 4 },
+  { label: '中等', pairs: 6 },
   { label: '困难', pairs: 8 },// 卡牌总数为 pairs*2，即 32 张
-  { label: '地狱', pairs: 16 },
+  //{ label: '地狱', pairs: 12 },
 ];
 
 function App() {
+  // 用户初始化
+  const initUser = () => {
+    const user = getUserFromLocal();
+    if (!user) {
+      setCurrentUser(createNewUser());
+      setShowUserModal(true);
+    } else {
+      setCurrentUser(user);
+    }
+  };
+
+  // 初始化用户信息
+  useEffect(() => {
+    const initialize = async () => {
+      initUser();
+      try {
+        const users = await getAllUsers();
+        setLeaderboard(users);
+      } catch (error) {
+        console.error('初始化排行榜失败:', error);
+      }
+    };
+    
+    initialize();
+  }, []);
+
   // 配置项
   const [themeIdx, setThemeIdx] = useState(0);
   const [pairs, setPairs] = useState(difficultyOptions[0].pairs);
   const [showSettings, setShowSettings] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
+  
+  // 用户状态
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [showUserModal, setShowUserModal] = useState(false);
 
   // 游戏状态
   const [cards, setCards] = useState<CardType[]>([]);
@@ -269,6 +335,10 @@ function App() {
   const [steps, setSteps] = useState(0);
   const [timer, setTimer] = useState(0);
   const [gameActive, setGameActive] = useState(false);
+  const [score, setScore] = useState(0);
+  const [combo, setCombo] = useState(0);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<User[]>([]);
   // 计时器
   useEffect(() => {
     let interval: number | null = null;
@@ -298,6 +368,8 @@ function App() {
     setLock(false);
     setSteps(0);
     setTimer(0);
+    setScore(0); // 重置分数
+    setCombo(0); // 重置连击
     setGameActive(true);
     setShowSettings(false);
   };
@@ -305,7 +377,10 @@ function App() {
   // 播放音效函数(带错误处理和音量控制)
   const playSound = (type: 'flip' | 'match' | 'fail' | 'win') => {
     try {
-      const audio = new Audio(soundFiles[type]);
+      const sound = type === 'win' 
+        ? soundFiles.win[Math.floor(Math.random() * soundFiles.win.length)]
+        : soundFiles[type];
+      const audio = new Audio(sound);
       audio.preload = 'auto';
       // 设置不同音效的音量
       if (type === 'fail') {
@@ -343,6 +418,16 @@ function App() {
           );
           setCards(updated);
           setMatchedCount((c) => c + 1);
+          
+          // 计分逻辑
+          const newCombo = combo + 1;
+          setCombo(newCombo);
+          const points = newCombo > 1 ? newCombo : 1;
+          setScore(s => {
+            const newScore = s + points;
+            console.log(`得分更新: +${points} (连击: ${newCombo}), 总分: ${newScore}`);
+            return newScore;
+          });
         } else {
           // 配对失败
           if (soundOn) playSound('fail');
@@ -350,6 +435,7 @@ function App() {
             i === i1 || i === i2 ? { ...card, flipped: false } : card
           );
           setCards(updated);
+          setCombo(0); // 重置连击
         }
         setFlippedIndices([]);
         setLock(false);
@@ -375,11 +461,13 @@ function App() {
         confetti.style.top = '50%';
         confetti.style.setProperty('--random-x', `${Math.random() * 2 - 1}`);
         confetti.style.setProperty('--random-y', `${Math.random() * 2 - 1}`);
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
         confetti.style.width = `${Math.random() * 10 + 5}px`;
         confetti.style.height = confetti.style.width;
-        confetti.style.animationDuration = `${Math.random() * 3 + 2}s`;
+        confetti.style.animationDuration = `${Math.random() * 4 + 4}s`;
         confetti.style.animationDelay = `${Math.random()}s`;
+        const randomChars = ['★', '你', '真', '棒'];
+        confetti.innerHTML = randomChars[Math.floor(Math.random() * randomChars.length)];
         container.appendChild(confetti);
       }
       
@@ -387,6 +475,37 @@ function App() {
       setTimeout(() => {
         document.body.removeChild(container);
       }, 5000);
+
+      // 保存用户分数
+      if (currentUser) {
+        const difficultyLabel = difficultyOptions.find(o => o.pairs === pairs)?.label || '';
+        const currentTheme = defaultThemes[themeIdx]?.name || '';
+        
+        if (!currentTheme) {
+          console.error('无效的主题索引:', themeIdx);
+          return;
+        }
+
+        const updateAndRefresh = async () => {
+          try {
+            const updatedUser = await updateUserScore(
+              currentUser,
+              currentTheme,
+              difficultyLabel,
+              score
+            );
+            await saveUser(updatedUser);
+            setCurrentUser(updatedUser);
+            
+            const users = await getAllUsers();
+            setLeaderboard(users);
+          } catch (error) {
+            console.error('保存分数失败:', error);
+          }
+        };
+        
+        updateAndRefresh();
+      }
     }
   }, [matchedCount, pairs, gameActive]);
 
@@ -399,10 +518,34 @@ function App() {
     startGame();
   };
 
+  // 用户保存函数
+  const handleSaveUser = (user: User) => {
+    saveUserToLocal(user);
+    setCurrentUser(user);
+    setShowUserModal(false);
+  };
+
   return (
     <div className="memory-game-container">
       {showSettings ? (
         <div className="settings-panel">
+      <button 
+        className="user-profile-button"
+        onClick={() => setShowUserModal(true)}
+      >
+        {currentUser && (
+          <>
+            <img src={currentUser.avatar} alt="用户头像" />
+            <span>{currentUser.username}</span>
+          </>
+        )}
+      </button>
+      {showUserModal && currentUser && (
+        <UserModal 
+          initialUser={currentUser}
+          onSave={handleSaveUser}
+        />
+      )}
           <h1>记忆翻牌配对</h1>
           
           <div className="theme-selection">
@@ -471,9 +614,32 @@ function App() {
               </div>
             ))}
           </div>
+          <div className="game-header">
+            <div className="artistic-score-display">
+              <div className="score-item">
+                <span className="score-label">分数</span>
+                <span className="score-value">{score}</span>
+              </div>
+              <div className="score-item">
+                <span className="score-label">连击</span>
+                <span className="score-value">{combo}</span>
+              </div>
+            </div>
+            <button hidden
+              className="leaderboard-button"
+              onClick={() => setShowLeaderboard(!showLeaderboard)}
+            >
+              {showLeaderboard ? '隐藏排行榜' : '查看排行榜'}
+            </button>
+          </div>
+          {showLeaderboard && (
+              <Leaderboard 
+                users={leaderboard}
+                theme={defaultThemes[themeIdx].name}
+                difficulty={difficultyOptions.find(o => o.pairs === pairs)?.label}
+              />
+            )}
           <div className="game-info">
-            {/*<p>已配对：{matchedCount} / {pairs}</p>
-            <p>步数：{steps}，用时：{timer} 秒</p>*/}
             {matchedCount === pairs && (
               <>
                 <div className="confetti-effect"></div>
