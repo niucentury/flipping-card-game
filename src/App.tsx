@@ -87,6 +87,7 @@ const defaultThemes = [
   {
     name: '玩偶',
     images: [
+      '/flipping-card-game/images/jiafeimao.png',
       '/flipping-card-game/images/xiaoxinqie.png',
       '/flipping-card-game/images/bingdundun.png',
       '/flipping-card-game/images/bull.png',
@@ -97,7 +98,6 @@ const defaultThemes = [
       '/flipping-card-game/images/dog.png',
       '/flipping-card-game/images/guawu.png',
       '/flipping-card-game/images/heixingxing.png',
-      '/flipping-card-game/images/jiafeimao.png',
       '/flipping-card-game/images/kaka.png',
       '/flipping-card-game/images/kapibala.png',
       '/flipping-card-game/images/mengqiqi.png',
@@ -155,6 +155,54 @@ const defaultThemes = [
     ],
     color: '#4ecdc4',
   },{
+    name: '写字表',
+    images: [
+    '写', '字', '洗', '讲', '进', '都', '唱', '站', '赶', '页', '户', '交', '父',
+    '向', '边', '行', '草', '过', '找', '吓', '为', '怕', '家', '象', '没', 
+    "到", "她", "空", "还", "干", "身", "星", "久", "巾",
+    "豆", "斗", "笔", "知", "道", "平", "安", "放", 
+    "灯", "车", "站", 
+    "课","坐","老","师","国","百","听","时","点","林","高","兴","着","往","瓜","兔",
+    "首","池","采","尖","角","早","玩","眼","泪","它","贝","气","机","台","伞","朵",
+    "美","这","看","鱼","面","问","加","抱","饱","物","造","运","欢","房","网","对",
+    "今","雪","细","夕","语","打","皮","跑","足","沙","包","习","近","远","学","玉",
+    "义","册","支","电","衣","床","前","思","故","乡","地","色","把","样","笑","再",
+    "节","米","间","分","吃","肉","止","斤","寸","丁","千","元","快","乐","当","书",
+    "画","毛","自","己","他","回","们","叫","从","好","走","河","说","让","共","产",
+    "党","太","阳","光","北","京","的","会","告","广","井","主","江","住","方","后",
+    "春","夏","秋","冬","吹","花","飞","入","什","么","古","胡","双","言","青","清",
+    "晴","苗","请","生","红","动","万","无","明","文","卡","片","合"
+    ],
+    color: '#9b59b6',
+    isText: true
+  },{
+    name: '识字表',
+    images: [
+      "识","霜","吹","降","落","飘","游","池","姓","氏","李","张","弓","吴","孙","眼","睛",
+      "保","护","事","情","吃","猜","凉","喜","欢","攻","令","感","动","组","识","计",
+      "算","减","式","图","形","卡","合","唱","团","热","爱","怀","抱","幸","福","成",
+      "城","毛","主","席","乡","亲","战","士","想","念","告","诉","座","广","场","非",
+      "宽","洁","美","丽","认","连","选","圈","涂","试","练","急","直","哭","跟","忽",
+      "然","听","喊","快","背","很","孤","单","每","种","邻","居","招","呼","怎","独",
+      "跳","绳","羽","毛","球","劲","轮","排","母","静","思","床","疑","举","望","低",
+      "胆","敢","勇","窗","睡","觉","乱","拉","样","端","粽","煮","盼","枣","甜","鲜",
+      "肉","电","视","裤","被","捉","迷","藏","物","蚂","蚁","粮","食","运","结","网",
+      "严","寒","酷","暑","朝","霞","操","暖","晨","细","杨","香","拔","拍","踢","跑",
+      "铃","真","身","体","丢","沙","包","之","初","相","近","教","道","专","幼","鞭",
+      "炮","泡","茶","饭","轻","穿","袍","浮","萍","诗","首","偷","泉","惜","照","柔",
+      "荷","露","角","浪","迈","悄","虾","壳","娃","淘","装","像","次","给","摇","篮",
+      "亮","晶","翅","膀","展","珠","停","坪","展","透","朵","阴","沉","闷","消","息",
+      "要","腰","呀","忙","呢","吗","面","吧","棍","豆","汤","蚊","扇","椅","牵","织",
+      "铅","笔","盒","具","仔","细","检","查","伙","伴","决","定","新","些","此","所",
+      "钟","迟","等","已","经","表","位","虎","熊","注","意","通","遍","百","为","因",
+      "舌","理","忘","第","猴","块","兴","掰","扛","扔","满","摘","追","捧","刷","梳",
+      "洗","澡","脸","盆","姑","娘","咕","咚","棉","病","治","燕","帮","害","别","惊",
+      "奇","熟","掉","湖","吓","鹿","象","野","拦","哪","领","壁","借","咬","难","爬",
+      "您","拨","摆","过","孩","转","吵","现","顶","胖","票","户","交","父"
+    ],
+    color: '#9b59b6',
+    isText: true
+  },{
   name: '职业',
     images: [
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f468-200d-1f393.svg', // 学生
@@ -198,37 +246,48 @@ const defaultThemes = [
     ],
     color: '#ff6b6b',
   },
-  /*{
+  {
     name: '自然',
     images: [
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f332.svg', // 小溪
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f333.svg', // 风
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f334.svg', // 湖泊
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f335.svg', // 海洋
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f33e.svg', // 山川
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f33f.svg', // 丘陵
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f340.svg', // 森林
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f341.svg', // 太阳
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f342.svg', // 月亮
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f343.svg', // 星星
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f344.svg', // 树木
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f345.svg', // 雨
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f346.svg', // 雷电
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f347.svg', // 雪
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f348.svg', // 云
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f349.svg'  // 彩虹
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/2600.svg',  // 太阳
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f30a.svg', // 海洋
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f30b.svg', // 火山
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f30f.svg', // 地球(亚洲)
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f315.svg', // 满月
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f319.svg', // 月牙
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/2601.svg',  // 云
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/2603.svg',  // 雪人
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/2604.svg',  // 彗星
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/26a1.svg',  // 闪电
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/26c5.svg',  // 太阳和云
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f300.svg', // 旋风
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f301.svg', // 雾
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f303.svg', // 夜景
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f304.svg', // 日出
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f305.svg', // 日出2
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f307.svg', // 日落
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f308.svg', // 彩虹
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f320.svg', // 流星
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f325.svg', // 太阳大云
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f326.svg', // 雨云
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f327.svg', // 下雨
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f328.svg', // 下雪
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f329.svg', // 闪电
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f32a.svg', // 龙卷风
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f32b.svg', // 雾
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f32c.svg', // 风脸
     ],
     color: '#1dd1a1',
-  },*/
-  /*{
+  },
+  {
     name: '生活',
     images: [
+      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f382.svg', // 生日蛋糕
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f37d.svg', // 餐具
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f37e.svg', // 瓶装饮料
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f37f.svg', // 爆米花
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f380.svg', // 礼物
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f381.svg', // 礼物盒
-      'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f382.svg', // 生日蛋糕
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f383.svg', // 南瓜灯
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f384.svg', // 圣诞树
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f386.svg', // 烟花
@@ -241,7 +300,7 @@ const defaultThemes = [
       'https://cdn.jsdelivr.net/gh/twitter/twemoji@latest/assets/svg/1f38d.svg'  // 风铃
     ],
     color: '#feca57',
-  },*/
+  },
   /*{
     name: '节日',
     images: [
@@ -285,9 +344,9 @@ interface CardType {
 const difficultyOptions = [
   //{ label: '测试', pairs: 1 },
   { label: '简单', pairs: 4 },
-  { label: '中等', pairs: 6 },
+  //{ label: '中等', pairs: 6 },
   { label: '困难', pairs: 8 },// 卡牌总数为 pairs*2，即 32 张
-  //{ label: '地狱', pairs: 12 },
+  { label: '地狱', pairs: 12 },
 ];
 
 function App() {
@@ -549,7 +608,7 @@ function App() {
           <h1>记忆翻牌配对</h1>
           
           <div className="theme-selection">
-            <h3>选择主题</h3>
+            <h3 hidden>选择主题</h3>
             <div className="theme-options" style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(4, 1fr)',
@@ -567,8 +626,11 @@ function App() {
                     alignItems: 'center',
                     cursor: 'pointer'
                   }}
-                >
-                  <img src={theme.images[0]} alt={theme.name} style={{width: '50px', height: '50px'}} />
+                >{theme.isText ? (
+                      <div className="text-card" style={{width: '50px', height: '50px',fontSize: '2rem',fontWeight: 'bold',color: 'black', margin: '0 0 8px'}}>{theme.images[0]}</div>
+                    ) : (
+                    <img src={theme.images[0]} alt={theme.name} style={{width: '50px', height: '50px'}} />
+                    )}
                   <span style={{marginTop: '5px', fontSize: '12px'}}>{theme.name}</span>
                   {themeIdx === index && <span className="checkmark">✓</span>}
                 </div>
@@ -608,7 +670,11 @@ function App() {
                 <div className="card-inner">
                   <div className="card-front"></div>
                   <div className="card-back">
+                    {defaultThemes[themeIdx].isText ? (
+                      <div className="text-card">{card.image}</div>
+                    ) : (
                     <img src={card.image} alt="card" />
+                    )}
                   </div>
                 </div>
               </div>
