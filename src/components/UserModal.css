@@ -76,3 +76,9 @@
 .save-button:hover {
   opacity: 0.9;
 }
+
+.cancel-button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+}

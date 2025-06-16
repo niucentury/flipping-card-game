@@ -5,9 +5,10 @@ import { saveUser } from '../services/userService';
 interface UserModalProps {
   initialUser?: User;
   onSave: (user: User) => void;
+  onCancel: () => void;
 }
 
-const UserModal: React.FC<UserModalProps> = ({ initialUser, onSave }) => {
+const UserModal: React.FC<UserModalProps> = ({ initialUser, onSave, onCancel }) => {
   const [username, setUsername] = useState(initialUser?.username || '');
   const [selectedAvatar, setSelectedAvatar] = useState(initialUser?.avatar || DEFAULT_AVATARS[0]);
 
@@ -56,9 +57,14 @@ const UserModal: React.FC<UserModalProps> = ({ initialUser, onSave }) => {
             </div>
           </div>
 
-          <button type="submit" className="save-button">
-            保存信息
-          </button>
+          <div className="button-group">
+            <button type="submit" className="save-button">
+              保存信息
+            </button>
+            <button type="button" className="cancel-button" onClick={onCancel}>
+              取消
+            </button>
+          </div>
         </form>
       </div>
     </div>

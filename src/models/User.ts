@@ -13,6 +13,11 @@ interface User {
       }
     }
   };
+  items: {
+    magicFinger: number;
+    transparentPotion: number;
+    cruiseMissile: number;
+  };
 }
 
 const DEFAULT_AVATARS = [

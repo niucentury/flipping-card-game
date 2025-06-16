@@ -19,7 +19,12 @@ const createNewUser = (ip?: string): User => ({
   totalScore: 0,
   lastLogin: new Date(),
   ip,
-  scores: {}
+  scores: {},
+  items: {
+    magicFinger: 100,
+    transparentPotion: 100,
+    cruiseMissile: 100
+  }
 });
 
 // 更新用户分数(同步到服务端)
@@ -47,14 +52,14 @@ const updateUserScore = async (user: User, theme: string, difficulty: string, sc
   };
 
   // 同步到服务端
-  const serverUser = await updateUserScoreOnServer(
+  /*const serverUser = await updateUserScoreOnServer(
     updatedUser.id,
     theme,
     difficulty,
     score
-  );
+  );*/
   
-  return serverUser || updatedUser;
+  return updatedUser;
 };
 
 // 获取所有用户(从服务端获取)
@@ -77,9 +82,10 @@ const saveUserToLocal = (user: User): void => {
 const saveUser = async (user: User): Promise<User> => {
   // 本地缓存
   saveUserToLocal(user);
+  return user;
   
   // 同步到服务端
-  try {
+  /*try {
     const serverUser = await saveUserToServer(user);
     if (!serverUser) {
       throw new Error('服务端保存用户失败');
@@ -89,7 +95,7 @@ const saveUser = async (user: User): Promise<User> => {
     console.error('保存用户到服务端失败:', error);
     // 回退到本地模式
     return user;
-  }
+  }*/
 };
 
 export { 
