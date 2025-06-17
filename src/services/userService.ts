@@ -19,6 +19,7 @@ const createNewUser = (ip?: string): User => ({
   totalScore: 0,
   lastLogin: new Date(),
   ip,
+  coins: 0, // 添加金币字段
   scores: {},
   items: {
     magicFinger: 100,
@@ -42,14 +43,24 @@ const updateUserScore = async (user: User, theme: string, difficulty: string, sc
   
   updatedUser.totalScore = (updatedUser.totalScore || 0) + score;
   
-  if (!updatedUser.scores[theme]) {
-    updatedUser.scores[theme] = {};
+  if (!updatedUser.scores[difficulty]) {
+    updatedUser.scores[difficulty] = {};
   }
   
-  updatedUser.scores[theme][difficulty] = {
-    highScore: Math.max(score, updatedUser.scores[theme][difficulty]?.highScore || 0),
+  updatedUser.scores[difficulty][theme] = {
+    highScore: Math.max(score, updatedUser.scores[difficulty][theme]?.highScore || 0),
     lastScore: score
   };
+
+  // 计算金币奖励
+  let coinsEarned = 0;
+  if (difficulty === '简单') {
+    coinsEarned = Math.floor(score / 5);
+  } else if (difficulty === '困难' || difficulty === '地狱') {
+    coinsEarned = Math.floor(score / 10);
+  }
+  
+  updatedUser.coins = (updatedUser.coins || 0) + coinsEarned;
 
   // 同步到服务端
   /*const serverUser = await updateUserScoreOnServer(

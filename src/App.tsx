@@ -6,6 +6,8 @@ import UserModal from './components/UserModal';
 import Leaderboard from './components/Leaderboard';
 import './components/UserModal.css';
 import UserProfileModal from './components/UserProfileModal';
+import ShopModal from './components/ShopModal';
+import './components/ShopModal.css';
 
 // 音效文件路径(使用本地音效文件)
 const soundFiles = {
@@ -353,20 +355,46 @@ const difficultyOptions = [
 ];
 
 function App() {
-  const useItem = (itemType: string) => {
-    if (items[itemType] <= 0 || isGameOver) return;
+  // 用户状态
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  
+  // 金币状态
+  const [coins, setCoins] = useState(currentUser?.coins || 0);
+  
+  // 道具商店状态
+  const [showShopModal, setShowShopModal] = useState(false);
+  
+  // 道具价格
+  const itemPrices = {
+    magicFinger: 100,
+    transparentPotion: 10,
+    cruiseMissile: 2
+  };
 
+  const useItem = (itemType: string) => {
+    // 验证道具类型和数量
+    if (!['magicFinger', 'transparentPotion', 'cruiseMissile'].includes(itemType) || 
+        items[itemType] <= 0 || 
+        isGameOver) {
+      return;
+    }
+
+    // 确保道具数量不会出现负值
+    const newCount = Math.max(0, items[itemType] - 1);
     const updatedItems = {
       ...items,
-      [itemType]: items[itemType] - 1
+      [itemType]: newCount
     };
     setItems(updatedItems);
     
+    // 同步更新用户数据
     if (currentUser) {
-      saveUserToLocal({
+      const updatedUser = {
         ...currentUser,
         items: updatedItems
-      });
+      };
+      saveUserToLocal(updatedUser);
+      setCurrentUser(updatedUser); // 确保状态一致
     }
 
     switch(itemType) {
@@ -419,7 +447,10 @@ function App() {
         for (let i = 0; i < unmatched.length; i++) {
           for (let j = i + 1; j < unmatched.length; j++) {
             if (unmatched[i].image === unmatched[j].image) {
-              // 获取道具按钮位置 - 使用更可靠的选择器
+              // 锁定交互
+              setLock(true);
+              
+              // 获取道具按钮位置
               const missileButton = document.querySelector('.item-container:nth-child(3) .item-button');
               if (missileButton) {
                 const buttonRect = missileButton.getBoundingClientRect();
@@ -427,8 +458,8 @@ function App() {
                 const startY = buttonRect.top + buttonRect.height / 2;
                 
                 // 获取目标卡牌位置
-                const card1 = document.querySelector('.card:nth-of-type(' + (i+1) + ')');
-                const card2 = document.querySelector('.card:nth-of-type(' + (j+1) + ')');
+                const card1 = document.querySelector('.card:nth-of-type(' + unmatched[i].id + ')');
+                const card2 = document.querySelector('.card:nth-of-type(' + unmatched[j].id + ')');
                 
                 if (card1 && card2) {
                   // 创建导弹元素
@@ -482,14 +513,11 @@ function App() {
                           const newCombo = combo + 1;
                           setCombo(newCombo);
                           const points = newCombo > 1 ? newCombo : 1;
-                          setScore(s => {
-                            const newScore = s + points;
-                            console.log(`巡航导弹得分: +${points} (连击: ${newCombo}), 总分: ${newScore}`);
-                            return newScore;
-                          });
+                          setScore(s => s + points);
                           
-                          // 播放匹配音效
+                          // 播放匹配音效并恢复交互
                           if (soundOn) playSound('match');
+                          setLock(false);
                         }, 500);
                       }, 100);
                     }, 500);
@@ -500,6 +528,8 @@ function App() {
             }
           }
         }
+        // 如果没有找到匹配对，也恢复交互
+        setLock(false);
         break;
     }
   };
@@ -546,8 +576,6 @@ function App() {
   const [showSettings, setShowSettings] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
   
-  // 用户状态
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [showUserModal, setShowUserModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -593,12 +621,12 @@ function App() {
     const images = shuffle(defaultThemes[themeIdx].images).slice(0, pairs);
     const cardList: CardType[] = shuffle(
       images.concat(images).map((img, idx) => ({
-        id: idx,
+        id: 0,
         image: img,
         flipped: false,
-        matched: false,
+        matched: false
       }))
-    );
+    ).map((card, idx) => ({...card, id: idx + 1}));
     setCards(cardList);
     setMatchedCount(0);
     setFlippedIndices([]);
@@ -688,7 +716,7 @@ function App() {
     }
   };
 
-  // 胜利音效
+  // 胜利音效和金币计算
   const winEffect = () => {
     if (matchedCount === pairs && gameActive) {
       playSound('win');
@@ -722,7 +750,7 @@ function App() {
         document.body.removeChild(container);
       }, 5000);
 
-      // 保存用户分数
+      // 保存用户分数和计算金币
       if (currentUser) {
         const difficultyLabel = difficultyOptions.find(o => o.pairs === pairs)?.label || '';
         const currentTheme = defaultThemes[themeIdx]?.name || '';
@@ -732,16 +760,49 @@ function App() {
           return;
         }
 
+        // 计算金币奖励
+        let coinsEarned = 0;
+        if (difficultyLabel === '简单') {
+          coinsEarned = Math.floor(score / 5);
+        } else if (difficultyLabel === '困难' || difficultyLabel === '地狱') {
+          coinsEarned = Math.floor(score / 10);
+        }
+        
         const updateAndRefresh = async () => {
           try {
-            const updatedUser = await updateUserScore(
-              currentUser,
-              currentTheme,
-              difficultyLabel,
-              score
-            );
+            const updatedUser = {
+              ...await updateUserScore(
+                currentUser,
+                currentTheme,
+                difficultyLabel,
+                score
+              ),
+              coins: (currentUser.coins || 0) + coinsEarned
+            };
             await saveUser(updatedUser);
             setCurrentUser(updatedUser);
+            
+            // 显示金币获得提示
+            if (coinsEarned > 0) {
+              // 创建金币获得通知
+              const coinNotification = document.createElement('div');
+              coinNotification.className = 'coin-notification';
+              coinNotification.innerHTML = `
+                <div class="coin-animation-container">
+                  <div class="coin-text">+${coinsEarned}</div>
+                  ${Array(coinsEarned).fill('<img src="/flipping-card-game/images/coin.jpeg" class="coin-animation" alt="金币" />').join('')}
+                </div>
+              `;
+              document.body.appendChild(coinNotification);
+              
+              // 金币飞入动画
+              setTimeout(() => {
+                coinNotification.classList.add('animate');
+                setTimeout(() => {
+                  coinNotification.remove();
+                }, 1000);
+              }, 100);
+            }
             
             //const users = await getAllUsers();
             //setLeaderboard(users);
@@ -772,8 +833,40 @@ function App() {
     setShowUserModal(false);
   };
 
+  // 购买道具函数
+  const buyItem = (itemType: string) => {
+    const price = itemPrices[itemType];
+    if (coins >= price) {
+      setCoins(coins - price);
+      setItems({
+        ...items,
+        [itemType]: items[itemType] + 1
+      });
+      
+      if (currentUser) {
+        saveUserToLocal({
+          ...currentUser,
+          coins: coins - price,
+          items: {
+            ...items,
+            [itemType]: items[itemType] + 1
+          }
+        });
+      }
+    }
+  };
+
   return (
     <div className="memory-game-container">
+      {/* 金币展示组件 - 修改为hover显示数量 */}
+      <div 
+        className="coin-display user-profile-button" 
+        onClick={() => setShowShopModal(true)}
+        title={`当前金币: ${currentUser?.coins || 0}`}
+      >
+        <img src="/flipping-card-game/images/coin.jpeg" className="coin-image" alt="金币" />
+        <span className="coin-amount">{currentUser?.coins || 0}</span>
+      </div>
       {showSettings ? (
         <div className="settings-panel">
       <button 
@@ -937,7 +1030,7 @@ function App() {
               <button 
                 className="item-button"
                 onClick={() => useItem('cruiseMissile')}
-                disabled={items.cruiseMissile <= 0 || isGameOver}
+                disabled={items.cruiseMissile <= 0 || isGameOver || lock}
               >
                 <div className="item-icon">🚀</div>
                 <div className="item-name">巡航导弹</div>
@@ -965,6 +1058,31 @@ function App() {
             )}
           </div>
         </>
+      )}
+
+      {/* 道具商店Modal */}
+      {showShopModal && (
+        <ShopModal
+          user={currentUser}
+          onPurchase={(itemType, cost) => {
+            if (currentUser) {
+              const updatedUser = {
+                ...currentUser,
+                coins: (currentUser.coins || 0) - cost,
+                items: {
+                  ...currentUser.items,
+                  [itemType]: (currentUser.items[itemType] || 0) + 1
+                }
+              };
+              saveUserToLocal(updatedUser);
+              setCurrentUser(updatedUser);
+              setItems(updatedUser.items); // 同步更新道具状态
+            }
+          }}
+          onClose={() => {
+            setShowShopModal(false);
+          }}
+        />
       )}
     </div>
   );

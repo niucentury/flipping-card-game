@@ -3,11 +3,12 @@ interface User {
   username: string;
   avatar: string;
   totalScore: number;
+  coins: number;
   lastLogin: Date;
   ip?: string;
   scores: {
-    [theme: string]: {
-      [difficulty: string]: {
+    [difficulty: string]: {
+      [theme: string]: {
         highScore: number;
         lastScore: number;
       }
