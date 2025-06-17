@@ -13,21 +13,21 @@ const ShopModal: React.FC<ShopModalProps> = ({ user, onClose, onPurchase }) => {
     { 
       type: 'magicFinger', 
       name: '魔法手指', 
-      price: 100, 
+      price: 10, 
       description: '翻开卡片时保持透明状态',
       icon: '👆'
     },
     { 
       type: 'transparentPotion', 
       name: '透明药水', 
-      price: 10, 
+      price: 1, 
       description: '随机使3张未翻卡片变透明',
       icon: '🧪'
     },
     { 
       type: 'cruiseMissile', 
       name: '巡航导弹', 
-      price: 2, 
+      price: 1, 
       description: '自动匹配一对卡片',
       icon: '🚀'
     }

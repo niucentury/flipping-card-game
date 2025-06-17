@@ -442,14 +442,77 @@ function App() {
         break;
 
       case 'cruiseMissile':
-        // 巡航导弹：自动匹配一对卡片并计算分数
+        // 锁定交互
+        setLock(true);
+        
+        // 优先处理已翻开一张卡片的情况
+        const flippedCard = cards.find(c => c.flipped && !c.matched);
+        if (flippedCard) {
+          // 查找匹配的另一张卡片
+          const matchedCard = cards.find(c => 
+            !c.flipped && !c.matched && c.image === flippedCard.image && c.id !== flippedCard.id
+          );
+          
+          if (matchedCard) {
+            setFlippedIndices([]);
+            // 获取道具按钮位置
+            const missileButton = document.querySelector('.item-container:nth-child(3) .item-button');
+            if (missileButton) {
+              const buttonRect = missileButton.getBoundingClientRect();
+              const startX = buttonRect.left + buttonRect.width / 2;
+              const startY = buttonRect.top + buttonRect.height / 2;
+              
+              // 获取目标卡牌位置
+              const targetCard = document.querySelector('.card:nth-of-type(' + matchedCard.id + ')');
+              
+              if (targetCard) {
+                // 创建导弹元素
+                const missile = document.createElement('div');
+                missile.className = 'cruise-missile';
+                missile.style.left = `${startX}px`;
+                missile.style.top = `${startY}px`;
+                missile.innerHTML = '🚀';
+                document.body.appendChild(missile);
+                const targetRect = targetCard.getBoundingClientRect();
+                
+                // 导弹飞行动画
+                setTimeout(() => {
+                  missile.style.transition = 'all 0.5s ease-out';
+                  missile.style.left = `${targetRect.left + targetRect.width / 2}px`;
+                  missile.style.top = `${targetRect.top + targetRect.height / 2}px`;
+                  
+                  // 卡牌翻开并计算分数
+                  setTimeout(() => {
+                    missile.remove();
+                    setCards(cards.map(card => 
+                      card.id === matchedCard.id || card.id === flippedCard.id
+                        ? {...card, flipped: true, matched: true} 
+                        : card
+                    ));
+                    setMatchedCount(prev => prev + 1);
+                    
+                    // 计算连击和分数
+                    const newCombo = combo + 1;
+                    setCombo(newCombo);
+                    const points = newCombo > 1 ? newCombo : 1;
+                    setScore(s => s + points);
+                    
+                    // 播放匹配音效并恢复交互
+                    if (soundOn) playSound('match');
+                    setLock(false);
+                  }, 500);
+                }, 100);
+              }
+            }
+            return;
+          }
+        }
+        
+        // 如果没有已翻开的卡片，则自动匹配一对卡片
         const unmatched = cards.filter(c => !c.matched);
         for (let i = 0; i < unmatched.length; i++) {
           for (let j = i + 1; j < unmatched.length; j++) {
             if (unmatched[i].image === unmatched[j].image) {
-              // 锁定交互
-              setLock(true);
-              
               // 获取道具按钮位置
               const missileButton = document.querySelector('.item-container:nth-child(3) .item-button');
               if (missileButton) {
