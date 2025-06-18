@@ -403,8 +403,12 @@
   position: absolute;
   top: 10px;
   left: 0;
-  z-index: 1;
+  z-index: 1000;
   pointer-events: none;
+}
+
+.game-header > * {
+  pointer-events: auto;
 }
 
 .leaderboard-button {
@@ -961,4 +965,71 @@ button:hover {
     height: 30px;
     opacity: 0.5;
   }
+}
+
+/* 暂停按钮样式 */
+.pause-button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  z-index: 10;
+  color:black;
+}
+
+.pause-button:hover {
+  background: none;
+}
+
+.pause-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 暂停弹窗样式 */
+.pause-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.pause-modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.pause-modal h2 {
+  margin-bottom: 20px;
+  color: var(--main-color);
+}
+
+.pause-modal-button {
+  display: block;
+  width: 200px;
+  padding: 10px;
+  margin: 10px auto;
+  background-color: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pause-modal-button:hover {
+  background-color: #555;
 }

@@ -666,17 +666,18 @@ function App() {
   const [isMagicFingerActive, setIsMagicFingerActive] = useState(false);
   const [isGameOver, setIsGameOver] = useState(false);
   const [isMagicFingerUsed, setIsMagicFingerUsed] = useState(false);
+  const [isGamePaused, setGamePaused] = useState(false);
 
   // 计时器
   useEffect(() => {
     let interval: number | null = null;
-    if (gameActive && matchedCount < pairs) {
+    if (gameActive && matchedCount < pairs && !isGamePaused) {
       interval = window.setInterval(() => setTimer((t) => t + 1), 1000);
     }
     return () => {
       if (interval !== null) clearInterval(interval);
     };
-  }, [gameActive, matchedCount, pairs]);
+  }, [gameActive, matchedCount, pairs, isGamePaused]);
 
   // 初始化卡牌
   const startGame = () => {
@@ -728,7 +729,7 @@ function App() {
 
   // 翻牌逻辑
   const handleFlip = (idx: number) => {
-    if (lock || cards[idx].flipped || cards[idx].matched) return;
+    if (lock || cards[idx].flipped || cards[idx].matched || isGamePaused) return;
     const newFlipped = [...flippedIndices, idx];
     const newCards = cards.map((card, i) =>
       i === idx ? { 
@@ -1048,6 +1049,17 @@ function App() {
             ))}
           </div>
           <div className="game-header">
+            <button 
+              className="pause-button"
+              onClick={() => {
+                console.log('Pause button clicked');
+                setGamePaused(true);
+              }}
+              disabled={isGameOver}
+              style={{zIndex: 100}}
+            >
+              ⏸
+            </button>
             <div className="artistic-score-display">
               <div className="score-item">
                 <span className="score-label">分数</span>
@@ -1102,6 +1114,28 @@ function App() {
             </div>
           </div>
 
+          {isGamePaused && (
+            <div className="pause-modal">
+              <div className="pause-modal-content">
+                <h2>游戏已暂停</h2>
+                <button 
+                  className="pause-modal-button"
+                  onClick={() => setGamePaused(false)}
+                >
+                  继续游戏
+                </button>
+                <button 
+                  className="pause-modal-button"
+                  onClick={() => {
+                    setGamePaused(false);
+                    setShowSettings(true);
+                  }}
+                >
+                  返回首页
+                </button>
+              </div>
+            </div>
+          )}
           {showLeaderboard && (
               <Leaderboard 
                 users={leaderboard}
