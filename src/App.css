@@ -182,6 +182,10 @@
   display: flex;
   gap: 12px;
   margin-top: 16px;
+  display: 'grid',
+  grid-template-columns: repeat(4, 1fr),
+  gap: '10px',
+  marginTop: '15px'
 }
 
 .difficulty-option {
@@ -193,6 +197,7 @@
   cursor: pointer;
   transition: all 0.2s;
   width: 30%;
+  border: 2px solid transparent;
 }
 
 .difficulty-option:hover {
@@ -200,6 +205,7 @@
 }
 
 .difficulty-option.selected {
+  border-color: var(--main-color);
   background: rgba(14, 210, 247, 0.1);
 }
 
@@ -219,10 +225,6 @@
   height: 12px;
   background: var(--main-color);
   border-radius: 50%;
-}
-
-.difficulty-option.selected .radio-button {
-  border-color: var(--main-color);
 }
 
 .start-button {

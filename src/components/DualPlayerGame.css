@@ -1,0 +1,231 @@
+.dual-player-container {
+  max-width:2000px;
+  margin: 10px auto;
+  text-align: center;
+  padding: 10px;
+}
+
+.dual-player-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.player-info {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50vh;
+  background-color: white;
+  text-align: center;
+  transition: all 0.3s ease;
+  pointer-events: none;
+  z-index: -1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-info:nth-child(1) {
+  top: 0;
+}
+
+.player-info:nth-child(2) {
+  bottom: 0;
+}
+
+.player-info.active {
+  background-color: #e3f2fd;
+}
+
+.player-name-0 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  position: absolute;
+  top: 0;
+  right: 50px;
+  width: 50%;
+  transform: rotate(180deg);
+  text-align: left;
+  margin-left: 100px;
+}
+
+.player-score-0 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  position: absolute;
+  margin-bottom: 5px;
+  top: 0;
+  left: 50px;
+  width: 50%;
+  transform: rotate(180deg);
+  text-align: right;
+}
+
+.player-turn-indicator-0 {
+  font-size: 1.2rem;
+  margin-top: 5px;
+  color: #2196f3;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  position: absolute;
+  top: 0;
+  transform: rotate(180deg);
+}
+
+.player-name-1 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  position: absolute;
+  bottom: 0;
+  left: -60px;
+  width: 50%;
+  text-align: left;
+  margin-left: 100px;
+}
+
+.player-score-1 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  position: absolute;
+  margin-bottom: 5px;
+  bottom: 0;
+  right: 50px;
+  width: 50%;
+  text-align: right;
+}
+
+.player-turn-indicator-1 {
+  font-size: 1.2rem;
+  margin-top: 5px;
+  color: #2196f3;
+  font-weight: bold;
+  animation: pulse 1.5s infinite;
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 5px;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.dual-card-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+  justify-content: center;
+  position: fixed;
+  z-index: 1000;
+  top: 50vh;
+  left: 0;
+  right: 0;
+  bottom: 50vh;
+  padding: 15px;
+  transform: translateY(-50%);
+  overflow-y: auto;
+  max-height: 100vh;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 90%;
+  height: 90%;
+  margin-top: 6px;
+}
+
+.dual-card {
+  aspect-ratio: 1;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.dual-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.dual-card.flipped .dual-card-inner {
+  transform: rotateY(180deg);
+}
+
+.dual-card-front, .dual-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dual-card-front {
+  background-color: white;
+  transform: rotateY(180deg);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.dual-card-back {
+  background-color: #2196f3;
+  color: white;
+}
+
+.dual-card-front img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+.text-card {
+  font-size: 2rem;
+  font-weight: bold;
+  color: black;
+}
+
+.dual-game-over {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 2000;
+}
+
+.dual-game-over h2 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.dual-game-over p {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+}
+
+.dual-game-over button {
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dual-game-over button:hover {
+  background-color: #0d8bf2;
+}
