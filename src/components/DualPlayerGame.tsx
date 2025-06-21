@@ -33,7 +33,7 @@ const DualPlayerGame: React.FC<{
 
   // 初始化卡牌
   useEffect(() => {
-    const images = shuffle(defaultThemes[themeIdx].images).slice(0, 2); // 6x6需要18对图片
+    const images = shuffle(defaultThemes[themeIdx].images).slice(0, 18); // 6x6需要18对图片
     const cardList = [...images, ...images]
       .map((img, idx) => ({ id: idx, image: img, flipped: false, matched: false }))
       .sort(() => Math.random() - 0.5);
