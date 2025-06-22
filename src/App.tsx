@@ -859,7 +859,7 @@ function App() {
                 <div className="confetti-effect"></div>
                 <div className="game-buttons">
                   <button className="restart-button" onClick={startGame}>重新开始</button>
-                  <button className="home-button" onClick={() => setShowSettings(true)}>返回首页</button>
+                  <button className="home-button" onClick={() => {setShowSettings(true);setSinglePlayerGame(false);}}>返回首页</button>
                 </div>
               </>
             )}

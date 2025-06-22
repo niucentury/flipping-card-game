@@ -110,7 +110,7 @@
 
 .score-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr;
   padding: 5px 0;
 }
 
